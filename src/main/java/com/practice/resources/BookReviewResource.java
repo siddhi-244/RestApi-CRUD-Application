@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Path("/")
-@Consumes({MediaType.APPLICATION_JSON})
+//@Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 public class BookReviewResource{
     BookReviewEntityDao bookReviewEntityDAO;
@@ -117,4 +117,56 @@ public class BookReviewResource{
         reviewEntityDao.deleteByBookId(id);
         return Response.status(Response.Status.ACCEPTED).build();
     }
+
+    @PATCH
+    @Path("/books/{id}")
+    public Response updateBookName(@PathParam("id") String id,@QueryParam("bookName") String bookName){
+        if(bookReviewEntityDAO.findById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
+        bookReviewEntityDAO.updateBookName(id,bookName);
+        return Response.accepted().build();
+
+    }
+    @PATCH
+    @Path("/books/{id}")
+    public Response updateBookAuthor(@PathParam("id") String id,@QueryParam("bookAuthor") String bookAuthor){
+        if(bookReviewEntityDAO.findById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
+        bookReviewEntityDAO.updateBookAuthor(id,bookAuthor);
+        return Response.accepted().build();
+
+    }
+
+    @PATCH
+    @Path("/books/{id}")
+    public Response updateBookPrice(@PathParam("id") String id,@QueryParam("price") Integer price){
+        if(bookReviewEntityDAO.findById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
+        bookReviewEntityDAO.updateBookPrice(id,price);
+        return Response.accepted().build();
+
+    }
+
+    @PATCH
+    @Path("/books/{id}/reviews")
+    public Response updateRating(@PathParam("id") String id,@QueryParam("rating") Integer rating){
+        if(reviewEntityDao.findReviewById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
+        reviewEntityDao.updateBookRating(id,rating);
+        return Response.accepted().build();
+    }
+    @PATCH
+    @Path("/books/{id}/reviews")
+    public Response updateCopies(@PathParam("id") String id,@QueryParam("copies_sold") Integer copies_sold){
+        if(reviewEntityDao.findReviewById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
+        reviewEntityDao.updateCopiesSold(id,copies_sold);
+        return Response.accepted().build();
+
+    }
+
+    @PATCH
+    @Path("/books/{id}")
+    public Response updateReviewText(@PathParam("id") String id,@QueryParam("review") String review){
+        if(reviewEntityDao.findReviewById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
+        reviewEntityDao.updateReviewText(id,review);
+        return Response.accepted().build();
+
+    }
+
 }

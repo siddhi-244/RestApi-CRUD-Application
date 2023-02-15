@@ -39,6 +39,9 @@ public interface ReviewEntityDao {
 //    @RegisterBeanMapper(BookReviewEntity.class)
     void updateCopiesSold(@Bind("id") String id,@Bind("copies_sold") Integer copies_sold);
 
+    @SqlUpdate("update book_review set review = :review where book_id = :id")
+//    @RegisterBeanMapper(BookReviewEntity.class)
+    void updateReviewText(@Bind("id") String id,@Bind("review") String review);
     @SqlUpdate("delete from book_review where book_id = :id")
 //    @RegisterBeanMapper(BookReviewEntity.class)
     void deleteByBookId(@Bind("id") String id);
