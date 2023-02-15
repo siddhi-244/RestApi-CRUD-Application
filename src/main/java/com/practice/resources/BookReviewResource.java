@@ -119,7 +119,7 @@ public class BookReviewResource{
     }
 
     @PATCH
-    @Path("/books/{id}")
+    @Path("/books/{id}/bookName")
     public Response updateBookName(@PathParam("id") String id,@QueryParam("bookName") String bookName){
         if(bookReviewEntityDAO.findById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
         bookReviewEntityDAO.updateBookName(id,bookName);
@@ -127,7 +127,7 @@ public class BookReviewResource{
 
     }
     @PATCH
-    @Path("/books/{id}")
+    @Path("/books/{id}/bookAuthor")
     public Response updateBookAuthor(@PathParam("id") String id,@QueryParam("bookAuthor") String bookAuthor){
         if(bookReviewEntityDAO.findById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
         bookReviewEntityDAO.updateBookAuthor(id,bookAuthor);
@@ -136,7 +136,7 @@ public class BookReviewResource{
     }
 
     @PATCH
-    @Path("/books/{id}")
+    @Path("/books/{id}/price")
     public Response updateBookPrice(@PathParam("id") String id,@QueryParam("price") Integer price){
         if(bookReviewEntityDAO.findById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
         bookReviewEntityDAO.updateBookPrice(id,price);
@@ -145,14 +145,14 @@ public class BookReviewResource{
     }
 
     @PATCH
-    @Path("/books/{id}/reviews")
+    @Path("/books/{id}/rating")
     public Response updateRating(@PathParam("id") String id,@QueryParam("rating") Integer rating){
         if(reviewEntityDao.findReviewById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
         reviewEntityDao.updateBookRating(id,rating);
         return Response.accepted().build();
     }
     @PATCH
-    @Path("/books/{id}/reviews")
+    @Path("/books/{id}/copies")
     public Response updateCopies(@PathParam("id") String id,@QueryParam("copies_sold") Integer copies_sold){
         if(reviewEntityDao.findReviewById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
         reviewEntityDao.updateCopiesSold(id,copies_sold);
@@ -161,12 +161,12 @@ public class BookReviewResource{
     }
 
     @PATCH
-    @Path("/books/{id}")
+    @Path("/books/{id}/reviews")
     public Response updateReviewText(@PathParam("id") String id,@QueryParam("review") String review){
         if(reviewEntityDao.findReviewById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
         reviewEntityDao.updateReviewText(id,review);
         return Response.accepted().build();
 
     }
-
+//
 }
