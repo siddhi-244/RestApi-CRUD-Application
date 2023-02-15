@@ -7,10 +7,11 @@ import com.practice.dao.ReviewEntityDao;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
 
-@Path("/book")
+@Path("/")
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 public class BookReviewResource{
@@ -22,91 +23,98 @@ public class BookReviewResource{
         this.reviewEntityDao=reviewEntityDao;
     }
     @GET
-    @Path("/AllBooks")
+    @Path("/books")
     public List<BookReviewEntity> getAll() {
         return bookReviewEntityDAO.getAll();
     }
     @GET
-    @Path("/bookDetails")
+    @Path("/books/reviews")
     public List<ReviewEntity> getAllReview(){
         return reviewEntityDao.getAllReview();
     }
     @GET
-    @Path("/{id}")
+    @Path("/books/{id}")
     public BookReviewEntity getBook(@PathParam("id") String id){
+
         return bookReviewEntityDAO.findById(id);
     }
 
     @GET
-    @Path("/bookDetail/{id}")
+    @Path("/books/{id}/reviews")
     public ReviewEntity getReview(@PathParam("id") String id){
         return reviewEntityDao.findReviewById(id);
     }
 
     //done
     @POST
-    @Path("/addbook")
-    public BookReviewEntity add(@Valid BookReviewEntity bookReviewEntity) {
+    @Path("/books")
+    public Response add(@Valid BookReviewEntity bookReviewEntity) {
 //        bookReviewEntityDAO.insert(bookReviewEntity);
         bookReviewEntity.setId(UUID.randomUUID().toString());
         bookReviewEntityDAO.insert(bookReviewEntity.getId(), bookReviewEntity.getBookName(), bookReviewEntity.getBookAuthor(), bookReviewEntity.getPrice());
-        return bookReviewEntity;
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @POST
-    @Path("/addbookReview/{id}")
-    public ReviewEntity addReview(@PathParam("id") String id,@Valid ReviewEntity reviewEntity) {
-//        bookReviewEntityDAO.insert(bookReviewEntity);
+    @Path("/books/{id}/reviews")
+    public Response addReview(@PathParam("id") String id,@Valid ReviewEntity reviewEntity) {
+        if(bookReviewEntityDAO.findById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
         reviewEntityDao.insertReview(id, reviewEntity.getRating(), reviewEntity.getReview(), reviewEntity.getCopies_sold());
-        return reviewEntityDao.findReviewById(id);
+        return Response.status(Response.Status.CREATED).build();
     }
     @PUT
-    @Path("/updateBookName/{id}")
-    public BookReviewEntity updateBook(@PathParam("id") String id, @Valid BookReviewEntity bookReviewEntity) {
-//        BookReviewEntity updateEntity = bookReviewEntityDAO.findById(id);
-        bookReviewEntityDAO.updateBookName(id,bookReviewEntity.getBookName());
-        return bookReviewEntityDAO.findById(id);
+    @Path("/books/{id}")
+    public Response updateBook(@PathParam("id") String id, @Valid BookReviewEntity bookReviewEntity) {
+        if(bookReviewEntityDAO.findById(id)==null) return Response.status(Response.Status.BAD_REQUEST).build();
+        bookReviewEntityDAO.updateBook(id,bookReviewEntity.getBookName(),bookReviewEntity.getBookAuthor(),bookReviewEntity.getPrice());
+        return Response.status(Response.Status.ACCEPTED).build();
     }
-    @PUT
-    @Path("/updateBookAuthor/{id}")
-    public BookReviewEntity updateAuthor(@PathParam("id") String id, @Valid BookReviewEntity bookReviewEntity) {
-        bookReviewEntityDAO.updateBookAuthor(id,bookReviewEntity.getBookAuthor());
-        return bookReviewEntityDAO.findById(id);
-    }
+//    @PUT
+//    @Path("/books/{id}")
+//    public Response updateAuthor(@PathParam("id") String id, @Valid BookReviewEntity bookReviewEntity) {
+//        if(bookReviewEntityDAO.findById(id)==null) return Response.status(Response.Status.BAD_REQUEST).build();
+//        bookReviewEntityDAO.updateBookAuthor(id,bookReviewEntity.getBookAuthor());
+//         return Response.status(Response.Status.ACCEPTED).build();
+//    }
 
     @PUT
-    @Path("/updateBookReview/{id}/{review}")
-    public ReviewEntity updateBookReview(@PathParam("id") String id, @PathParam("review") String review ) {
-//        BookReviewEntity updateEntity = bookReviewEntityDAO.findById(id);
-        reviewEntityDao.updateBookReview(id,review);
-        return reviewEntityDao.findReviewById(id);
+    @Path("/books/{id}/reviews")
+    public Response updateReview(@PathParam("id") String id, @Valid ReviewEntity reviewEntity ) {
+        if(reviewEntityDao.findReviewById(id)==null) return Response.status(Response.Status.BAD_REQUEST).build();
+        reviewEntityDao.updateReview(id,reviewEntity.getRating(),reviewEntity.getReview(),reviewEntity.getCopies_sold());
+        return Response.status(Response.Status.ACCEPTED).build();
     }
-    @PUT
-    @Path("/updateBookRating/{id}/{rating}")
-    public ReviewEntity updateBookRating(@PathParam("id") String id, @PathParam("rating") Integer rating ) {
-//        BookReviewEntity updateEntity = bookReviewEntityDAO.findById(id);
-        reviewEntityDao.updateBookRating(id,rating);
-        return reviewEntityDao.findReviewById(id);
-    }
-    @PUT
-    @Path("/updateCopiesSold/{id}/{copies_sold}")
-    public ReviewEntity updateCopiesSold(@PathParam("id") String id, @PathParam("copies_sold") Integer copies_sold ) {
-//        BookReviewEntity updateEntity = bookReviewEntityDAO.findById(id);
-        reviewEntityDao.updateCopiesSold(id,copies_sold);
-        return reviewEntityDao.findReviewById(id);
-    }
+//    @PUT
+//    @Path("/reviews/{id}")
+//    public Response updateBookRating(@PathParam("id") String id, @QueryParam("rating") Integer rating ) {
+////        BookReviewEntity updateEntity = bookReviewEntityDAO.findById(id);
+//        if(reviewEntityDao.findReviewById(id)==null) return Response.status(Response.Status.BAD_REQUEST).build();
+//        reviewEntityDao.updateBookRating(id,rating);
+//        return Response.status(Response.Status.ACCEPTED).build();
+//    }
+//    @PUT
+//    @Path("/reviews/{id}")
+//    public Response updateCopiesSold(@PathParam("id") String id, @QueryParam("copies_sold") Integer copies_sold ) {
+////        BookReviewEntity updateEntity = bookReviewEntityDAO.findById(id);
+//        if(reviewEntityDao.findReviewById(id)==null) return Response.status(Response.Status.BAD_REQUEST).build();
+//        reviewEntityDao.updateCopiesSold(id,copies_sold);
+//        return Response.status(Response.Status.ACCEPTED).build();
+//    }
 
 
     //done
     @DELETE
-    @Path("/{id}")
-    public void delete(@PathParam("id") String id) {
+    @Path("/books/{id}")
+    public Response delete(@PathParam("id") String id) {
+        if(bookReviewEntityDAO.findById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
         bookReviewEntityDAO.deleteById(id);
+        return Response.status(Response.Status.ACCEPTED).build();
     }
     @DELETE
-    @Path("/deleteReview/{id}")
-    public void deleteReview(@PathParam("id") String id) {
-
+    @Path("/books/{id}/reviews")
+    public Response deleteReview(@PathParam("id") String id) {
+        if(reviewEntityDao.findReviewById(id)==null) return Response.status(Response.Status.NOT_FOUND).build();
         reviewEntityDao.deleteByBookId(id);
+        return Response.status(Response.Status.ACCEPTED).build();
     }
 }

@@ -27,9 +27,9 @@ public interface ReviewEntityDao {
     @SqlUpdate("insert into book_review (book_id,rating,review,copies_sold) values (:book_id,:rating,:review,:copies_sold)")
     int insertReview(@Bind("book_id") String book_id, @Bind("rating") Integer rating, @Bind("review") String review,@Bind("copies_sold") Integer copies_sold);
 
-    @SqlUpdate("update book_review set review = :review where book_id = :id")
+    @SqlUpdate("update book_review set rating = :rating , review = :review , copies_sold= :copies_sold where book_id = :id")
 //    @RegisterBeanMapper(BookReviewEntity.class)
-    void updateBookReview(@Bind("id") String id,@Bind("review") String review);
+    void updateReview(@Bind("id") String id,@Bind("rating") Integer rating,@Bind("review") String review,@Bind("copies_sold") Integer copies_sold);
 
     @SqlUpdate("update book_review set rating = :rating where book_id = :id")
 //    @RegisterBeanMapper(BookReviewEntity.class)
